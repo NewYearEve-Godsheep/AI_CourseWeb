@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { courses, site, type Course } from '../../data/site';
+
+export function getStaticPaths() {
+  return courses.map((course) => ({ params: { slug: course.slug }, props: { course } }));
+}
+
+const { course } = Astro.props as { course: Course };
+const modules = [
+  ['01', '高效计算的基本问题', '课程导览、资源模型与性能度量'],
+  ['02', '模型压缩与量化', '剪枝、蒸馏、低比特表示与部署权衡'],
+  ['03', '编译与推理优化', '计算图、内核选择、批处理与延迟优化'],
+  ['04', '端侧与分布式训练', '受限设备、通信开销和协同训练'],
+  ['05', '服务系统与评测', '模型服务、可靠性、成本和端到端评测'],
+  ['06', '项目展示与复盘', '展示原型、讨论结果并总结工程决策'],
+];
+---
+
+<BaseLayout title={`${course.title} | ${site.name}`} description={course.description}>
+  <section class="course-hero course-hero--detail">
+    <div class="shell">
+      <a class="back-link" href="/courses/"><span aria-hidden="true">←</span> 返回课程目录</a>
+      <div class="course-title-row">
+        <div>
+          <p class="eyebrow">{course.code} · {course.term}</p>
+          <h1>{course.title}</h1>
+          <p>{course.description}</p>
+        </div>
+        <div class={`course-badge course-badge--${course.accent}`}>
+          <span>{course.level}</span>
+          <strong>{course.status}</strong>
+        </div>
+      </div>
+      <dl class="course-details">
+        <div><dt>授课时间</dt><dd>周二、周四 14:00–15:30</dd></div>
+        <div><dt>授课地点</dt><dd>教学楼 A-201</dd></div>
+        <div><dt>授课教师</dt><dd>{site.instructor}</dd></div>
+        <div><dt>课程形式</dt><dd>讲授、讨论与项目</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <div class="shell course-body">
+    <aside class="course-aside">
+      <nav aria-label="课程页面导航">
+        <a href="#overview">课程概览</a>
+        <a href="#schedule">课程安排</a>
+        <a href="#assignments">作业与项目</a>
+        <a href="#policies">课程规范</a>
+      </nav>
+      <a class="button button--primary full-width" href={`mailto:${site.email}?subject=${encodeURIComponent(course.title + ' 课程咨询')}`}>咨询课程组</a>
+    </aside>
+
+    <article class="course-content">
+      <section id="overview">
+        <p class="eyebrow">课程概览</p>
+        <h2>从模型到系统，完成一次可解释的优化。</h2>
+        <p>
+          本课程讨论高效人工智能系统中的核心问题：当算力、内存、带宽和功耗有限时，如何选择模型、组织计算并评估真实部署效果。课程不会把优化看作单一技术，而是把它放进完整的系统约束中。
+        </p>
+        <p>
+          你将阅读关键论文，完成可重复的实验，并以小组项目形式交付一个能够说明性能与取舍的原型系统。
+        </p>
+      </section>
+
+      <section id="schedule">
+        <p class="eyebrow">课程安排</p>
+        <h2>六个模块，逐步建立系统判断力。</h2>
+        <ol class="schedule-list">
+          {modules.map(([number, title, description]) => (
+            <li><span>{number}</span><div><h3>{title}</h3><p>{description}</p></div></li>
+          ))}
+        </ol>
+      </section>
+
+      <section id="assignments">
+        <p class="eyebrow">作业与项目</p>
+        <h2>用可验证的结果完成学习。</h2>
+        <div class="assignment-grid">
+          <div><span>40%</span><h3>实验作业</h3><p>围绕压缩、推理或系统评测完成三次独立实验。</p></div>
+          <div><span>15%</span><h3>论文讨论</h3><p>带着明确问题阅读，并在讨论课分享判断。</p></div>
+          <div><span>45%</span><h3>课程项目</h3><p>从需求、方案到基准评测，完成一个小组项目。</p></div>
+        </div>
+      </section>
+
+      <section id="policies">
+        <p class="eyebrow">课程规范</p>
+        <h2>保持开放、尊重与可追溯。</h2>
+        <p>请按时提交作业，独立完成标注为个人任务的部分。小组项目须清楚记录每位成员的贡献；引用代码、资料和模型时，请在报告中标明来源。</p>
+      </section>
+    </article>
+  </div>
+</BaseLayout>

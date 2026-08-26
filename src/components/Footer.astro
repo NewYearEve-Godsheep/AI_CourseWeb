@@ -1,0 +1,27 @@
+---
+import { site } from '../data/site';
+---
+
+<footer class="site-footer">
+  <div class="shell footer-grid">
+    <div>
+      <a class="brand footer-brand" href="/" aria-label={`${site.name} 首页`}>
+        <span class="brand-mark" aria-hidden="true">AI</span>
+        <span class="brand-copy">
+          <strong>{site.name}</strong>
+          <small>Learning Systems</small>
+        </span>
+      </a>
+      <p>面向实践的人工智能课程与学习资料。</p>
+    </div>
+    <div class="footer-links">
+      <a href="/courses/">课程目录</a>
+      <a href="/about/">课程团队</a>
+      <a href={`mailto:${site.email}`}>课程联系邮箱</a>
+    </div>
+  </div>
+  <div class="shell footer-bottom">
+    <span>&copy; {new Date().getFullYear()} {site.name}</span>
+    <span>静态站点，适合轻量公网部署</span>
+  </div>
+</footer>

@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout title={`课程团队 | ${site.name}`} description="认识课程团队并获取联系信息。">
+  <section class="page-hero page-hero--short">
+    <div class="shell">
+      <p class="eyebrow">课程团队</p>
+      <h1>认真教学，<br />也认真倾听。</h1>
+      <p>课程团队负责教学内容、学习支持与资料维护。联系方式和办公时间会随学期同步更新。</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="shell team-grid">
+      <div class="team-note">
+        <p class="eyebrow">联系信息</p>
+        <h2>课程沟通从一封邮件开始。</h2>
+        <a class="button button--primary" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+      <div class="team-list">
+        <article><span class="team-index">01</span><div><h3>课程教师</h3><p>负责课程设计、授课与项目指导。</p></div></article>
+        <article><span class="team-index">02</span><div><h3>助教团队</h3><p>协助答疑、作业反馈与实验支持。</p></div></article>
+        <article><span class="team-index">03</span><div><h3>课程同学</h3><p>通过讨论、协作和分享共同推进学习。</p></div></article>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

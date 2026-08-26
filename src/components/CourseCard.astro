@@ -1,0 +1,25 @@
+---
+import type { Course } from '../data/site';
+
+type Props = { course: Course };
+const { course } = Astro.props;
+---
+
+<article class={`course-card course-card--${course.accent}`} data-course={JSON.stringify(course)}>
+  <div class="course-card-topline">
+    <span>{course.code}</span>
+    <span class="course-status">{course.status}</span>
+  </div>
+  <h3><a href={`/courses/${course.slug}/`}>{course.title}</a></h3>
+  <p>{course.description}</p>
+  <div class="course-card-meta">
+    <span>{course.term}</span>
+    <span>{course.level}</span>
+  </div>
+  <div class="topic-list" aria-label="课程主题">
+    {course.topics.map((topic) => <span>{topic}</span>)}
+  </div>
+  <a class="text-link" href={`/courses/${course.slug}/`}>
+    查看课程 <span aria-hidden="true">→</span>
+  </a>
+</article>
