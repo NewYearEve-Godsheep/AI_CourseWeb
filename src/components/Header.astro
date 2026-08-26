@@ -1,37 +1,50 @@
 ---
 import { site } from '../data/site';
 
+type Props = { locale?: 'zh' | 'en' };
+const { locale = 'zh' } = Astro.props;
 const pathname = Astro.url.pathname;
+const isEnglish = locale === 'en' || pathname.startsWith('/en/');
+const prefix = isEnglish ? '/en' : '';
+const languagePath = isEnglish ? (pathname.replace(/^\/en/, '') || '/') : `/en${pathname}`;
 const links = [
-  { href: '/', label: '课程首页' },
-  { href: '/courses/', label: '全部课程' },
-  { href: '/about/', label: '课程团队' },
+  { href: `${prefix}/`, label: isEnglish ? 'Home' : '课程首页' },
+  { href: `${prefix}/courses/ai-design-application/`, label: isEnglish ? 'Course' : '课程概览' },
+  { href: `${prefix}/projects/`, label: isEnglish ? 'Projects' : '项目工作台' },
+  { href: `${prefix}/research/`, label: isEnglish ? 'Research' : '科研方向' },
 ];
 ---
 
 <header class="site-header">
   <div class="shell header-inner">
-    <a class="brand" href="/" aria-label={`${site.name} 首页`}>
-      <span class="brand-mark" aria-hidden="true">AI</span>
+    <a class="brand" href={`${prefix}/`} aria-label={isEnglish ? `${site.name} home` : `${site.name} 首页`}>
+      <span class="brand-mark" aria-hidden="true">PL</span>
       <span class="brand-copy">
         <strong>{site.name}</strong>
-        <small>Learning Systems</small>
+        <small>AI Design · Fudan Microelectronics</small>
       </span>
     </a>
 
-    <nav class="desktop-nav" aria-label="主导航">
+    <nav class="desktop-nav" aria-label={isEnglish ? 'Primary navigation' : '主导航'}>
       {links.map((link) => (
-        <a class:list={{ active: pathname === link.href }} href={link.href}>{link.label}</a>
+        <a class:list={{ active: pathname === link.href || (link.href !== `${prefix}/` && pathname.startsWith(link.href)) }} href={link.href}>{link.label}</a>
       ))}
     </nav>
 
-    <a class="header-action" href={`mailto:${site.email}`}>联系课程组</a>
+    <a class="header-action" href={`${prefix}/research/#faculty`}>{isEnglish ? 'Contact' : '联系课程组'}</a>
+
+    <div class="language-switch" aria-label={isEnglish ? 'Language' : '语言选择'}>
+      <a class:list={{ active: !isEnglish }} href={isEnglish ? languagePath : '/'} lang="zh-CN">中</a>
+      <span aria-hidden="true">/</span>
+      <a class:list={{ active: isEnglish }} href={isEnglish ? '/en/' : languagePath} lang="en">EN</a>
+    </div>
 
     <details class="mobile-nav">
-      <summary aria-label="打开导航菜单"><span></span><span></span><span></span></summary>
-      <nav aria-label="移动端主导航">
+      <summary aria-label={isEnglish ? 'Open navigation menu' : '打开导航菜单'}><span></span><span></span><span></span></summary>
+      <nav aria-label={isEnglish ? 'Mobile navigation' : '移动端主导航'}>
         {links.map((link) => <a href={link.href}>{link.label}</a>)}
-        <a href={`mailto:${site.email}`}>联系课程组</a>
+        <a href={`${prefix}/research/#faculty`}>{isEnglish ? 'Contact course group' : '联系课程组'}</a>
+        <div class="mobile-language-switch"><a href={isEnglish ? languagePath : '/'}>中文</a><a href={isEnglish ? '/en/' : languagePath}>English</a></div>
       </nav>
     </details>
   </div>

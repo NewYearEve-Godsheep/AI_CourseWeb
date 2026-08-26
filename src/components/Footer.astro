@@ -1,27 +1,34 @@
 ---
 import { site } from '../data/site';
+
+type Props = { locale?: 'zh' | 'en' };
+const { locale = 'zh' } = Astro.props;
+const isEnglish = locale === 'en';
+const prefix = isEnglish ? '/en' : '';
 ---
 
 <footer class="site-footer">
   <div class="shell footer-grid">
     <div>
-      <a class="brand footer-brand" href="/" aria-label={`${site.name} 首页`}>
-        <span class="brand-mark" aria-hidden="true">AI</span>
+      <a class="brand footer-brand" href={`${prefix}/`} aria-label={isEnglish ? `${site.name} home` : `${site.name} 首页`}>
+        <span class="brand-mark" aria-hidden="true">PL</span>
         <span class="brand-copy">
           <strong>{site.name}</strong>
-          <small>Learning Systems</small>
+          <small>AI Design · Fudan Microelectronics</small>
         </span>
       </a>
-      <p>面向实践的人工智能课程与学习资料。</p>
+      <p>{isEnglish ? 'AI design and application coursework, with research opportunities for students.' : '人工智能设计与应用课程，以及面向学生的科研机会。'}</p>
     </div>
     <div class="footer-links">
-      <a href="/courses/">课程目录</a>
-      <a href="/about/">课程团队</a>
-      <a href={`mailto:${site.email}`}>课程联系邮箱</a>
+      <a href={`${prefix}/courses/ai-design-application/`}>{isEnglish ? 'Course' : '课程概览'}</a>
+      <a href={`${prefix}/projects/`}>{isEnglish ? 'Projects' : '项目'}</a>
+      <a href={`${prefix}/research/`}>{isEnglish ? 'Research' : '科研方向'}</a>
+      <a href={`mailto:${site.email}`}>{isEnglish ? 'Email the course group' : '课程联系邮箱'}</a>
     </div>
   </div>
   <div class="shell footer-bottom">
     <span>&copy; {new Date().getFullYear()} {site.name}</span>
-    <span>静态站点，适合轻量公网部署</span>
+    <span>{isEnglish ? 'Fudan University School of Microelectronics' : site.school} · {site.courseCode}</span>
   </div>
+  <div class="shell footer-disclaimer">{isEnglish ? 'This website is maintained by the course group for course and research information. It is not the official website of Fudan University.' : '本网站为课程组维护的课程和科研信息页面，不代表复旦大学官方网站。'}</div>
 </footer>

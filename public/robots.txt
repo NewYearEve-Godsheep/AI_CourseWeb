@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://course.example.com/sitemap-index.xml
+Sitemap: https://pchianglab.com/sitemap-index.xml

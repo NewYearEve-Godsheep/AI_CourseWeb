@@ -7,17 +7,21 @@ import { site } from '../data/site';
 type Props = {
   title?: string;
   description?: string;
+  locale?: 'zh' | 'en';
 };
 
 const {
   title = `${site.courseName} | ${site.name}`,
   description = site.description,
+  locale = 'zh',
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const chinesePath = Astro.url.pathname.startsWith('/en/') ? (Astro.url.pathname.replace(/^\/en/, '') || '/') : Astro.url.pathname;
+const englishPath = Astro.url.pathname.startsWith('/en/') ? Astro.url.pathname : `/en${Astro.url.pathname}`;
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang={locale === 'en' ? 'en' : 'zh-CN'}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,13 +29,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="theme-color" content="#14231f" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="zh-CN" href={new URL(chinesePath, Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL(englishPath, Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(chinesePath, Astro.site)} />
     <title>{title}</title>
   </head>
   <body>
-    <Header />
+    <Header locale={locale} />
     <main>
       <slot />
     </main>
-    <Footer />
+    <Footer locale={locale} />
   </body>
 </html>

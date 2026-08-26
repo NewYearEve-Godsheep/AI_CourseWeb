@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { projects, type Project } from '../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project } = Astro.props as { project: Project };
+const projectIndex = projects.findIndex((item) => item.slug === project.slug);
+const previousProject = projectIndex > 0 ? projects[projectIndex - 1] : null;
+const nextProject = projectIndex < projects.length - 1 ? projects[projectIndex + 1] : null;
+const docs = import.meta.glob('../../../project/*.md', { eager: true, query: '?raw', import: 'default' }) as Record<string, string>;
+const rawDocument = Object.entries(docs).find(([path]) => path.endsWith(project.source.replace('project/', '')))?.[1] ?? '';
+
+function markdownToHtml(markdown: string) {
+  const escape = (value: string) => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+  const inline = (value: string) => escape(value)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+  const lines = markdown.split(/\r?\n/);
+  const output: string[] = [];
+  let paragraph: string[] = [];
+  let list: string[] = [];
+  let orderedList: string[] = [];
+  let inCode = false;
+  let code: string[] = [];
+  const flushParagraph = () => { if (paragraph.length) { output.push(`<p>${inline(paragraph.join(' '))}</p>`); paragraph = []; } };
+  const flushList = () => { if (list.length) { output.push(`<ul>${list.map((item) => `<li>${inline(item)}</li>`).join('')}</ul>`); list = []; } };
+  const flushOrderedList = () => { if (orderedList.length) { output.push(`<ol>${orderedList.map((item) => `<li>${inline(item)}</li>`).join('')}</ol>`); orderedList = []; } };
+  lines.forEach((line) => {
+    if (line.startsWith('```')) { flushParagraph(); flushList(); flushOrderedList(); if (inCode) { output.push(`<pre><code>${escape(code.join('\n'))}</code></pre>`); code = []; } inCode = !inCode; return; }
+    if (inCode) { code.push(line); return; }
+    if (/^#{1,3} /.test(line)) { flushParagraph(); flushList(); flushOrderedList(); const match = line.match(/^(#{1,3}) (.*)$/); if (match) output.push(`<h${match[1].length}>${inline(match[2])}</h${match[1].length}>`); return; }
+    if (/^\d+\.\s+/.test(line)) { flushParagraph(); flushList(); orderedList.push(line.replace(/^\d+\.\s+/, '')); return; }
+    if (/^- /.test(line)) { flushParagraph(); flushOrderedList(); list.push(line.slice(2)); return; }
+    if (!line.trim()) { flushParagraph(); flushList(); flushOrderedList(); return; }
+    paragraph.push(line.trim());
+  });
+  flushParagraph(); flushList(); flushOrderedList();
+  return output.join('');
+}
+
+const documentHtml = markdownToHtml(rawDocument);
+---
+
+<BaseLayout title={`${project.title} | 项目工作台`} description={project.summary}>
+  <section class={`project-detail-hero project-detail-hero--${project.accent}`}><div class="shell">
+    <a class="back-link" href="/projects/"><span aria-hidden="true">←</span> 返回项目工作台</a>
+    <div class="project-detail-heading"><div><p class="eyebrow">项目 {project.number} · {project.track}</p><h1>{project.title}</h1><p>{project.summary}</p></div><div class="project-detail-index">{project.number}<span>/ 06</span></div></div>
+    <nav class="project-pagination project-pagination--top" aria-label="切换项目">
+      {previousProject ? <a class="project-switch" href={`/projects/${previousProject.slug}/`}><span aria-hidden="true">←</span><small>上一个项目</small><strong>{previousProject.shortTitle}</strong></a> : <span class="project-switch project-switch--disabled"><span aria-hidden="true">←</span><small>已经是第一个项目</small></span>}
+      {nextProject ? <a class="project-switch project-switch--next" href={`/projects/${nextProject.slug}/`}><small>下一个项目</small><strong>{nextProject.shortTitle}</strong><span aria-hidden="true">→</span></a> : <span class="project-switch project-switch--next project-switch--disabled"><small>已经是最后一个项目</small><span aria-hidden="true">→</span></span>}
+    </nav>
+    <dl class="project-detail-facts"><div><dt>适合方向</dt><dd>{project.difficulty}</dd></div><div><dt>资源条件</dt><dd>{project.resources}</dd></div><div><dt>主要交付</dt><dd>{project.deliverable}</dd></div></dl>
+  </div></section>
+  <div class="shell project-detail-body"><aside class="course-aside"><nav aria-label="项目页面导航"><a href="#brief">项目摘要</a><a href="#metrics">核心指标</a><a href="#handbook">项目手册</a></nav><a class="button button--primary full-width" href="/research/#faculty">咨询课程组</a></aside>
+    <article class="course-content project-content"><section id="brief"><p class="eyebrow">项目摘要</p><h2>从场景、基线到可复现证据。</h2><p>{project.summary}</p><p>项目手册建议先完成一个可以在电脑上运行的最小版本，再逐步加入真实约束。最后分享方法、结果、遇到的困难、限制和下一步。</p></section>
+      <section id="metrics"><p class="eyebrow">评测重点</p><h2>用指标说明取舍。</h2><div class="metric-list">{project.metrics.map((metric, index) => <div><span>0{index + 1}</span><strong>{metric}</strong></div>)}</div></section>
+      <section id="handbook"><p class="eyebrow">完整项目手册</p><div class="markdown-content" set:html={documentHtml}></div></section>
+    </article>
+  </div>
+</BaseLayout>

@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { projects } from '../../data/site';
+---
+
+<BaseLayout title="项目工作台 | PChiang Lab" description="人工智能设计与应用课程的六个综合项目方向。">
+  <section class="page-hero page-hero--short"><div class="shell"><p class="eyebrow">课程项目 / 40% 汇报 + 40% 论文</p><h1>从兴趣出发，<br />做一个真实项目。</h1><p>六个方向从可运行的小版本开始，适合边学边做；你可以按兴趣和可用资源选择。</p></div></section>
+  <section class="section section--muted"><div class="shell"><div class="section-heading"><div><p class="eyebrow">六个项目方向</p><h2>按兴趣和资源选择。</h2></div><div class="project-filter-note">AI 系统 · AI Hardware · Physical AI · 生成式 AI · 代码智能</div></div><div class="project-grid">{projects.map((project) => <a class={`project-card project-card--${project.accent}`} href={`/projects/${project.slug}/`}><div class="project-card-meta"><span class="project-card-number">{project.number}</span><span class="project-card-track">{project.track}</span></div><h3>{project.title}</h3><p>{project.summary}</p><dl class="project-card-details"><div><dt>适合</dt><dd>{project.difficulty}</dd></div><div><dt>资源</dt><dd>{project.resources}</dd></div></dl><span class="card-arrow" aria-hidden="true">↗</span></a>)}</div></div></section>
+  <section class="section project-handbook"><div class="shell project-handbook-grid"><div><p class="eyebrow">项目指南</p><h2>从一个小而清楚的问题开始。</h2></div><ul class="requirement-list"><li><strong>场景</strong><span>可以先从一个具体用户或工程问题开始。</span></li><li><strong>基线</strong><span>先跑通简单方法，再逐步尝试改进。</span></li><li><strong>证据</strong><span>记录关键参数，用一两类指标说明变化。</span></li><li><strong>复盘</strong><span>分享有效的地方、遇到的困难和下一步。</span></li><li><strong>边界</strong><span>一起保护隐私、许可证、密钥和真实设备安全。</span></li></ul></div></section>
+  <section class="section"><div class="shell project-timeline"><div><p class="eyebrow">推荐节奏</p><h2>四周把想法变成证据。</h2></div><ol><li><span>01</span><div><strong>选题与调研</strong><p>明确场景、用户、输入、输出和成功标准。</p></div></li><li><span>02</span><div><strong>最小基线</strong><p>建立数据集、评测脚本和可运行版本。</p></div></li><li><span>03</span><div><strong>核心实验</strong><p>加入技术方法，完成至少三组对比。</p></div></li><li><span>04</span><div><strong>压力测试与 Demo</strong><p>修复失败，准备 5 分钟展示和 2 至 4 页报告。</p></div></li></ol></div></section>
+</BaseLayout>

@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { featuredCourse, projects, site, englishProjects } from '../../data/site';
+---
+
+<BaseLayout locale="en" title={`AI Design: Introduction & Fundamentals | ${site.name}`} description="AI design and application coursework, projects, and research opportunities." >
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">{featuredCourse.code} · {site.termEn}</p>
+        <h1>AI Design:<br /><span>Introduction &amp; Fundamentals</span></h1>
+        <p class="hero-lede">From Transformers and diffusion models to multimodal agents, inference systems, and AI hardware, build a complete path from principles to applications.</p>
+        <div class="hero-actions"><a class="button button--primary" href={`/en/courses/${featuredCourse.slug}/`}>View the course</a><a class="button button--secondary" href="/en/projects/">Explore projects</a></div>
+        <dl class="hero-facts" aria-label="Course information"><div><dt>Credits / hours</dt><dd>2 credits · 36 hours</dd></div><div><dt>Language</dt><dd>Bilingual</dd></div><div><dt>Audience</dt><dd>Graduate students</dd></div></dl>
+      </div>
+      <div class="course-visual" aria-label="The course path from model to application">
+        <div class="visual-label"><span>AI DESIGN SYSTEM</span><span>COURSE STUDIO</span></div>
+        <div class="visual-title">Model<br />to<br />Application</div>
+        <div class="visual-board" aria-label="Three-step course path"><ol class="pathway">
+          <li class="pathway-step"><span class="pathway-index">01</span><span class="pathway-copy"><strong>Transform</strong><small>Turn a problem into a computable representation</small></span><span class="pathway-arrow" aria-hidden="true">↗</span></li>
+          <li class="pathway-step"><span class="pathway-index">02</span><span class="pathway-copy"><strong>Reason</strong><small>Use models and evidence to test decisions</small></span><span class="pathway-arrow" aria-hidden="true">↗</span></li>
+          <li class="pathway-step"><span class="pathway-index">03</span><span class="pathway-copy"><strong>Build</strong><small>Turn the idea into a runnable, measurable system</small></span><span class="pathway-arrow" aria-hidden="true">↗</span></li>
+        </ol></div>
+        <div class="visual-footer"><span>LECTURE + PRACTICE</span><span>02 CREDITS</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section course-intro"><div class="shell section-split"><div><p class="eyebrow">Course overview</p><h2>Learn to design AI systems, not only use models.</h2></div><div class="prose"><p>This graduate course introduces the principles and practice of AI design and software development. Topics include Transformers, diffusion, multimodal and psychology-informed agents, inference extensions, BitNet accelerators, and memory-free computing.</p><p>You will implement simplified models, call leading APIs, and connect theory, engineering constraints, and interdisciplinary questions through a capstone project.</p><a class="text-link" href={`/en/courses/${featuredCourse.slug}/`}>View course details <span aria-hidden="true">→</span></a></div></div></section>
+
+  <section class="section section--muted"><div class="shell"><div class="section-heading"><div><p class="eyebrow">Course projects</p><h2>Start with a runnable minimum.</h2></div><a class="text-link" href="/en/projects/">View all six projects <span aria-hidden="true">→</span></a></div><div class="project-grid project-grid--preview">{projects.slice(0, 3).map((project) => { const copy = englishProjects[project.slug]; return <a class={`project-card project-card--${project.accent}`} href={`/en/projects/${project.slug}/`}><span class="project-card-number">{project.number}</span><span class="project-card-track">{copy.track}</span><h3>{copy.shortTitle}</h3><p>{copy.summary}</p><span class="card-arrow" aria-hidden="true">↗</span></a>; })}</div></div></section>
+
+  <section class="section research-callout"><div class="shell research-callout-simple"><div><p class="eyebrow">Research directions</p><h2>Turn course questions into research.</h2><p class="prose">Paid research opportunities are open to undergraduate and graduate students, including part-time and summer formats.</p></div><a class="button button--primary" href="/en/research/">Explore research</a></div></section>
+</BaseLayout>

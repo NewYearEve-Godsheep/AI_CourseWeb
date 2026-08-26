@@ -1,94 +1,24 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { courses, site, type Course } from '../../data/site';
+import { courses, projects, site, type Course } from '../../data/site';
 
-export function getStaticPaths() {
-  return courses.map((course) => ({ params: { slug: course.slug }, props: { course } }));
-}
-
+export function getStaticPaths() { return courses.map((course) => ({ params: { slug: course.slug }, props: { course } })); }
 const { course } = Astro.props as { course: Course };
-const modules = [
-  ['01', '高效计算的基本问题', '课程导览、资源模型与性能度量'],
-  ['02', '模型压缩与量化', '剪枝、蒸馏、低比特表示与部署权衡'],
-  ['03', '编译与推理优化', '计算图、内核选择、批处理与延迟优化'],
-  ['04', '端侧与分布式训练', '受限设备、通信开销和协同训练'],
-  ['05', '服务系统与评测', '模型服务、可靠性、成本和端到端评测'],
-  ['06', '项目展示与复盘', '展示原型、讨论结果并总结工程决策'],
-];
 ---
 
 <BaseLayout title={`${course.title} | ${site.name}`} description={course.description}>
-  <section class="course-hero course-hero--detail">
-    <div class="shell">
-      <a class="back-link" href="/courses/"><span aria-hidden="true">←</span> 返回课程目录</a>
-      <div class="course-title-row">
-        <div>
-          <p class="eyebrow">{course.code} · {course.term}</p>
-          <h1>{course.title}</h1>
-          <p>{course.description}</p>
-        </div>
-        <div class={`course-badge course-badge--${course.accent}`}>
-          <span>{course.level}</span>
-          <strong>{course.status}</strong>
-        </div>
-      </div>
-      <dl class="course-details">
-        <div><dt>授课时间</dt><dd>周二、周四 14:00–15:30</dd></div>
-        <div><dt>授课地点</dt><dd>教学楼 A-201</dd></div>
-        <div><dt>授课教师</dt><dd>{site.instructor}</dd></div>
-        <div><dt>课程形式</dt><dd>讲授、讨论与项目</dd></div>
-      </dl>
-    </div>
-  </section>
+  <section class="course-hero course-hero--detail"><div class="shell">
+    <a class="back-link" href="/"><span aria-hidden="true">←</span> 返回课程首页</a>
+    <div class="course-title-row"><div><p class="eyebrow">{course.code} · {course.term}</p><h1>{course.title}</h1><p class="course-name-en">{site.courseNameEn}</p><p>{course.description}</p></div><div class={`course-badge course-badge--${course.accent}`}><span>{course.level}</span><strong>{course.status}</strong></div></div>
+    <dl class="course-details"><div><dt>学分 / 学时</dt><dd>2 / 36</dd></div><div><dt>授课语言</dt><dd>双语</dd></div><div><dt>开课单位</dt><dd>微电子学院</dd></div><div><dt>主讲教师</dt><dd>{site.instructor}</dd></div></dl>
+  </div></section>
 
-  <div class="shell course-body">
-    <aside class="course-aside">
-      <nav aria-label="课程页面导航">
-        <a href="#overview">课程概览</a>
-        <a href="#schedule">课程安排</a>
-        <a href="#assignments">作业与项目</a>
-        <a href="#policies">课程规范</a>
-      </nav>
-      <a class="button button--primary full-width" href={`mailto:${site.email}?subject=${encodeURIComponent(course.title + ' 课程咨询')}`}>咨询课程组</a>
-    </aside>
-
+  <div class="shell course-body"><aside class="course-aside"><nav aria-label="课程页面导航"><a href="#overview">课程概览</a><a href="#objectives">学习目标</a><a href="#projects">课程项目</a><a href="#assessment">考核方式</a></nav><a class="button button--primary full-width" href="/research/#faculty">联系课程组</a></aside>
     <article class="course-content">
-      <section id="overview">
-        <p class="eyebrow">课程概览</p>
-        <h2>从模型到系统，完成一次可解释的优化。</h2>
-        <p>
-          本课程讨论高效人工智能系统中的核心问题：当算力、内存、带宽和功耗有限时，如何选择模型、组织计算并评估真实部署效果。课程不会把优化看作单一技术，而是把它放进完整的系统约束中。
-        </p>
-        <p>
-          你将阅读关键论文，完成可重复的实验，并以小组项目形式交付一个能够说明性能与取舍的原型系统。
-        </p>
-      </section>
-
-      <section id="schedule">
-        <p class="eyebrow">课程安排</p>
-        <h2>六个模块，逐步建立系统判断力。</h2>
-        <ol class="schedule-list">
-          {modules.map(([number, title, description]) => (
-            <li><span>{number}</span><div><h3>{title}</h3><p>{description}</p></div></li>
-          ))}
-        </ol>
-      </section>
-
-      <section id="assignments">
-        <p class="eyebrow">作业与项目</p>
-        <h2>用可验证的结果完成学习。</h2>
-        <div class="assignment-grid">
-          <div><span>40%</span><h3>实验作业</h3><p>围绕压缩、推理或系统评测完成三次独立实验。</p></div>
-          <div><span>15%</span><h3>论文讨论</h3><p>带着明确问题阅读，并在讨论课分享判断。</p></div>
-          <div><span>45%</span><h3>课程项目</h3><p>从需求、方案到基准评测，完成一个小组项目。</p></div>
-        </div>
-      </section>
-
-      <section id="policies">
-        <p class="eyebrow">课程规范</p>
-        <h2>保持开放、尊重与可追溯。</h2>
-        <p>请按时提交作业，独立完成标注为个人任务的部分。小组项目须清楚记录每位成员的贡献；引用代码、资料和模型时，请在报告中标明来源。</p>
-      </section>
+      <section id="overview"><p class="eyebrow">课程概览</p><h2>从核心模型到真实应用。</h2><p>《人工智能设计与应用》面向研究生，系统介绍人工智能在设计与软件开发中的原理与实践。课程将讲授、实践和讨论结合起来，要求学生实现简化模型、调用主流 API，并完成综合项目。</p><div class="info-grid"><div><strong>课程层级</strong><span>研究生</span></div><div><strong>总学时</strong><span>36 小时</span></div><div><strong>授课形式</strong><span>讲授、实践、讨论</span></div><div><strong>先修课程</strong><span>无特别指定</span></div></div></section>
+      <section id="objectives"><p class="eyebrow">学习目标</p><h2>完成一次从理解到设计的跨学科学习。</h2><ul class="objective-list"><li>掌握 Transformer、Diffusion 等核心模型的基本原理与发展趋势。</li><li>理解 AI 推理扩展、BitNet 加速器和无存储计算等前沿议题。</li><li>实现简化模型、调用主流 AI API，设计图像、视频和多模态 Agent。</li><li>培养跨学科创新、问题解决和团队协作能力，并完成综合项目。</li></ul></section>
+      <section id="projects"><p class="eyebrow">课程项目</p><h2>选择一个方向，把课程内容做成原型。</h2><p>你可以从一个清楚的场景开始，逐步尝试方法，用几项指标记录变化，并在项目工作台找到完整参考。</p><div class="project-grid project-grid--compact">{projects.map((project) => <a class={`project-card project-card--${project.accent}`} href={`/projects/${project.slug}/`}><span class="project-card-number">{project.number}</span><span class="project-card-track">{project.track}</span><h3>{project.shortTitle}</h3><p>{project.summary}</p><span class="card-arrow" aria-hidden="true">↗</span></a>)}</div><a class="text-link" href="/projects/">进入项目工作台 <span aria-hidden="true">→</span></a></section>
+      <section id="assessment"><p class="eyebrow">考核方式</p><h2>用可验证的结果完成学习。</h2><div class="assessment-grid"><div><span>20%</span><h3>作业</h3><p>模型实现、API 实验、阅读总结和技术短报告。</p></div><div><span>40%</span><h3>课题研讨 / 汇报</h3><p>围绕真实问题进行小组项目汇报与讨论。</p></div><div><span>40%</span><h3>课题论文</h3><p>报告方法、实验结果、失败案例、限制和下一步。</p></div></div></section>
     </article>
   </div>
 </BaseLayout>
